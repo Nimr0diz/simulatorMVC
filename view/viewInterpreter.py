@@ -31,7 +31,10 @@ class ViewInterpreter:
       try_to_exit = False
       command_name, args = self.parse_input(user_input)
       if command_name in all_commands:
-        all_commands[command_name](args)        
+        all_commands[command_name](args)
+      else:
+        print("the command '{}' doesn't exist.".format(command_name))
+        continue        
 
   def parse_input(self,user_input):
     user_input = re.sub(" +"," ",user_input)
