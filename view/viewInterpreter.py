@@ -2,7 +2,7 @@ import string
 import subprocess as sp
 import re
 from controller.controller import Controller
-
+from view.gui_screens.gui_classes.view import View
 class ViewInterpreter:
   def __init__(self,controller):
     self.controller = controller
@@ -20,6 +20,7 @@ class ViewInterpreter:
     interrupted = False
     self.load_world({'f': './_data/simple_world.world'})
     self.run_algorithm({'a': 'greedy_a','t': 600})
+    self.show_scenerio({})
     while not interrupted:
       try:
         user_input = input(">>> ")
@@ -94,3 +95,8 @@ class ViewInterpreter:
       print("Algorithm run complete.\nrun 'infoscenerio' for details or 'showscenerio' for GUI view")
     else:
       print(error_msg)
+  
+  def show_scenerio(self,args):
+    scenerio = self.controller.get_scenerio_for_gui()
+    View(scenerio)
+

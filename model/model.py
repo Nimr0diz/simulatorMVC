@@ -24,7 +24,10 @@ class Model:
   def run_algorithm_on_world(self,algo,tpd):
     try:
       self.current_scenerio = dispatcher.run_algorithm_on_world(self.current_world,algo,tpd)
-      print(self.current_scenerio)
+      # print(self.current_scenerio)
     except FileNotFoundError as e:
       return False,e
     return True,""
+
+  def get_scenerio_for_gui(self):
+    return self.current_scenerio

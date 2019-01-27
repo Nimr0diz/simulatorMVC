@@ -18,4 +18,6 @@ class Controller:
   def run_algorithm_on_world(self,algo,tpd):
     self.check_for_model()
     return self.model.run_algorithm_on_world(algo,tpd)
-    
+  def get_scenerio_for_gui(self):
+    self.check_for_model()
+    return self.model.get_scenerio_for_gui()

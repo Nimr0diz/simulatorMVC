@@ -12,7 +12,7 @@ def run_algorithm_on_world(world,alg_name,tpd):
   patrol = start_patrol(world,algo,tpd,vertexes)
   return {
     'world': world,
-    'patrol': patrol,
+    'frames': patrol,
   }
 
 def create_vertexes_from_visit_points(world):
@@ -42,7 +42,7 @@ def start_patrol(world,algo,tpd,vertexes):
     robot['current_vertex'] = next_vertex
     global_time += len(frames_of_path)
     vertexes[next_vertex].visit(global_time)
-    patrol.append(frames_of_path)
+    patrol.extend(frames_of_path)
   
   return patrol
 
@@ -62,17 +62,17 @@ def complex_path_length(world,vp_src,vp_dst):
 
 def complex_path_steps(world,vp_src,vp_dst):
   path = dijakstra.get_points_path_with_dijakstra(world,world['visit_points'][vp_src]['position'],world['visit_points'][vp_dst]['position'])
-  frames = []
+  frames = [{'position':path[0],'angle':0}]
   if len(path) == 1:
     return [{'angle': 0, 'position': path[0]}]
   for i in range(0, len(path) - 1):
-    frames += simple_path_steps(path[i], path[i + 1], world['robot']['walk_speed'], world['robot']['rotation_speed'])
+    frames += simple_path_steps(path[i],frames[-1]['angle'], path[i + 1], world['robot']['walk_speed'], world['robot']['rotation_speed'])
   return frames
 
-def simple_path_steps(p_src, p_dst,walk_speed,rotation_speed):
+def simple_path_steps(p_src,current_angle, p_dst,walk_speed,rotation_speed):
   frames = []
   target_angle = dispatcher_utils.calculate_new_angle(p_src,p_dst)
-  frames = dispatcher_utils.get_rotation_frames(target_angle,p_src,rotation_speed)
+  frames = dispatcher_utils.get_rotation_frames(current_angle,target_angle,p_src,rotation_speed)
   total_distance = int(math.sqrt(((p_dst.x - p_src.x)**2) + ((p_dst.y - p_src.y)**2)))
   for step in range(0,total_distance,walk_speed):
       frames.append({'angle': target_angle, 'position': Point(p_src.x + math.cos(target_angle) * step,p_src.y + math.sin(target_angle)* step)})

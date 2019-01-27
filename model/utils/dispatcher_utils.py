@@ -12,7 +12,7 @@ def calculate_new_angle(p_src,p_dst):
             target_angle += math.pi
     return target_angle
 
-def get_rotation_frames(new_angle,position, rotation_speed):
+def get_rotation_frames(old_angle,new_angle,position, rotation_speed):
     ang_src = 0  #self.robot.current_angle % (math.pi*2)
     ang_dst = new_angle % (math.pi*2)
     if ang_src > ang_dst:

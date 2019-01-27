@@ -1,0 +1,52 @@
+import time
+
+class Controller:
+    def __init__(self,control_widgets,monitor,scenerio):
+        self.control_widgets = control_widgets
+        self.monitor = monitor
+        
+        self.scenerio = scenerio
+
+        self.is_playing = False
+        self.show_text = {
+            'starvation': False,
+            'probability': False
+        }
+        self.frame_index = 0
+
+
+    def start(self):
+        world = self.scenerio['world']
+        self.monitor.init_objects(world['visit_points'],world['visit_points'][world['robot']['start_point']],world['obstacles'])
+        prev_frame_index = -1
+        while self.frame_index < len(self.scenerio['frames']):
+            time.sleep(0.025)
+            if self.frame_index != prev_frame_index:
+                self.monitor.drawFrame(self.scenerio['frames'][self.frame_index],self.frame_index)
+            else:
+                self.monitor.canvas.update()
+            prev_frame_index = self.frame_index
+            self.control_widgets.update_timeline(self.frame_index)
+            if self.is_playing:
+                self.frame_index += 1
+
+
+    def play_or_pause(self):
+        if self.is_playing:
+            self.is_playing = False
+        else:
+            self.is_playing = True
+        return self.is_playing
+
+
+    def jump_to_frame(self,newFrame):
+        self.frame_index = newFrame
+
+    
+    def toggle_starvation_text(self):
+        self.show_text['starvation'] = not self.show_text['starvation'] 
+        return self.show_text['starvation']
+
+    def toggle_probability_text(self):
+        self.show_text['probability'] = not self.show_text['probability'] 
+        return self.show_text['probability']
