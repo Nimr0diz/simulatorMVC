@@ -11,12 +11,15 @@ class ViewInterpreter:
     all_commands ={
       'exit': self.exit,
       'loadworld': self.load_world,
+      'runalgo': self.run_algorithm,
     }
 
     self.print_opening_message()
 
     try_to_exit = False
     interrupted = False
+    self.load_world({'f': './_data/simple_world.world'})
+    self.run_algorithm({'a': 'greedy_a','t': 600})
     while not interrupted:
       try:
         user_input = input(">>> ")
@@ -79,6 +82,15 @@ class ViewInterpreter:
     path = args['f']
     success,error_msg = self.controller.load_world_from_file(path)
     if success:
-      print("success!")
+      print("World loaded successfully!")
+    else:
+      print(error_msg)
+  
+  def run_algorithm(self,args):
+    algo = args['a']
+    tpd = args['t']
+    success,error_msg = self.controller.run_algorithm_on_world(algo,tpd)
+    if success:
+      print("Algorithm run complete.\nrun 'infoscenerio' for details or 'showscenerio' for GUI view")
     else:
       print(error_msg)

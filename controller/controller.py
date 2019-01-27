@@ -15,4 +15,7 @@ class Controller:
   def load_world_from_file(self,path):
     self.check_for_model()
     return self.model.load_world_from_file(path)
+  def run_algorithm_on_world(self,algo,tpd):
+    self.check_for_model()
+    return self.model.run_algorithm_on_world(algo,tpd)
     
