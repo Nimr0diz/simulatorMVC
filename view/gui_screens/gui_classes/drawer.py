@@ -58,13 +58,13 @@ def create_vertex(canvas,vertex):
     vertex_starvation_text = canvas.create_text(
         v['position'].x,
         v['position'].y - 40,
-        # text = VERTEX_STARVATION_TEMPLATE.format(0,v.st,v.ts,0),
+        text = VERTEX_STARVATION_TEMPLATE.format(0,v['starvation'],0,0),
     )
 
     vertex_probability_text = canvas.create_text(
         v['position'].x,
         v['position'].y - 20,
-        # text = VERTEX_PROBABILITY_TEMPLATE.format(v.p),
+        text = VERTEX_PROBABILITY_TEMPLATE.format(v['probability']),
     )
 
     return {
@@ -75,17 +75,16 @@ def create_vertex(canvas,vertex):
         },
     }
 
-def update_vertex(canvas,vertex,vertex_data,frame_index,show_text):
-    v = vertex_data
+def update_vertex(canvas,vertex,vertex_static,vertex_live,frame_index,show_text):
     canvas.itemconfigure(
         vertex['text']['starvation'],
-        # text = VERTEX_STARVATION_TEMPLATE.format(frame_index - v.lv, v.st),
-        fill = 'red' if frame_index > v.lv + v.st else 'black',
+        text = VERTEX_STARVATION_TEMPLATE.format(frame_index - vertex_live['last_visit'], vertex_static['starvation']),
+        fill = 'red' if frame_index > vertex_live['last_visit'] + vertex_static['starvation'] else 'black',
         state = 'normal' if show_text['starvation'] else 'hidden',
     )
     canvas.itemconfigure(
         vertex['text']['probability'],
-        # text = VERTEX_PROBABILITY_TEMPLATE.format('%.3f' % v.p),
+        text = VERTEX_PROBABILITY_TEMPLATE.format('%.3f' % vertex_static['probability']),
         state = 'normal' if show_text['probability'] else 'hidden',
 
     )

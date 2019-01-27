@@ -22,16 +22,16 @@ class Monitor:
         self.canvas.create_rectangle(1,1,self.width,self.height)
         self.robot = create_robot(self.canvas,robot_location['position'])
         self.verts = [create_vertex(self.canvas,v) for v in vertexes]
+        self.verts_static = vertexes
         for ob in obstacles:
             self.canvas.create_line(ob[0].x, ob[0].y, ob[1].x, ob[1].y)
     
     def drawFrame(self,frame,ind):
-        print(frame)
         pos = frame['position']
         ang = frame['angle']
         update_robot(self.canvas,self.robot,pos,ang)
-        # for v,v_data in zip(self.verts,frame['vertexes']):
-        #     update_vertex(self.canvas,v,v_data,ind,self.controller.show_text)
+        for v,v_static,v_live in zip(self.verts,self.verts_static,frame['vertexes']):
+            update_vertex(self.canvas,v,v_static,v_live,ind,self.controller.show_text)
         if 'message' in frame:
             print("MONITOR[{0}]: {1}".format(ind,frame['message']))
         self.canvas.update()
