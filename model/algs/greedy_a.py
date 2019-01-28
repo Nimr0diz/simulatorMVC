@@ -1,4 +1,4 @@
-import model.utils.algo_utils as algo_utils 
+import model.utils.global_utils as global_utils 
 
 class Greedy_a:
 
@@ -30,7 +30,7 @@ class Greedy_a:
     max_ind = current_vertex_ind
     max_price = 0
     for i,v in enumerate(vertexes):
-      current_v_price = algo_utils.h(v.cst(current_time),v.p)
+      current_v_price = global_utils.price(v.cst(current_time),v.p)
       if current_v_price > max_price:
         max_ind = i
         max_price = current_v_price

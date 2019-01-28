@@ -12,6 +12,7 @@ class ViewInterpreter:
         'loadworld': self.load_world,
         'runalgo': self.run_algorithm,
         'showscenerio': self.show_scenerio,
+        'infoscenerio': self.print_scenerio_info,
     }
 
     self.load_scripts_from_file(script_file)
@@ -92,8 +93,9 @@ class ViewInterpreter:
     print("If you want to use specific command just type: [COMMAND] -?")
     print("If you want to know what commands do you have just type: cmdlist")
     print("") 
-  def exit(self):
-    pass
+
+  def exit(self,args):
+    exit()
 
   def load_world(self,args):
     path = args['f']
@@ -113,6 +115,22 @@ class ViewInterpreter:
       print(error_msg)
   
   def show_scenerio(self,args):
-    scenerio = self.controller.get_scenerio_for_gui()
-    View(scenerio)
+    response = self.controller.get_scenerio_for_gui()
+    success = response[0]
+    if success:
+      scenerio = response[1]
+      View(scenerio)
+    else:
+      error_msg = response[1]
+      print(error_msg)
+
+  def print_scenerio_info(self,args):
+    details = self.controller.get_scenerio_info()
+    text_lines = [" {}: {} ".format(k,v) for k,v in details.items()]
+    size = max([len(tl) for tl in text_lines])
+    print(text_lines)
+    print("#" + size*"#" + "#")
+    for tl in text_lines:
+      print("#" + tl.ljust(size) + "#")
+    print("#" + size*"#" + "#")
 

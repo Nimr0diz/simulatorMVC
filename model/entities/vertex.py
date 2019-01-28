@@ -1,4 +1,4 @@
-
+import model.utils.global_utils as global_utils
 
 class Vertex:
 
@@ -10,7 +10,7 @@ class Vertex:
         self.st = starvation_time
 
     def cst(self, current_time):
-        return max(current_time - self.lv - self.st, 0) ** 2
+        return global_utils.time_function(current_time - self.lv - self.st)
 
     def __update_lv(self, current_time):
         self.lv = current_time

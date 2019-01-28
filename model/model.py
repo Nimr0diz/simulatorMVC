@@ -29,7 +29,14 @@ class Model:
       # print(self.current_scenerio)
     except FileNotFoundError as e:
       return False,e
+    except NameError as e:
+      return False,e
     return True,""
 
   def get_scenerio_for_gui(self):
-    return self.current_scenerio
+    if self.current_scenerio is None:
+      return False,"No scenerio have been created"
+    return True,self.current_scenerio
+  
+  def get_scenerio_info(self):
+    return self.current_scenerio['statistic']

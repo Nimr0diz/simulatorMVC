@@ -8,6 +8,7 @@ VERTEX_COLOR = 'blue'
 VERTEX_TARGET_COLOR = 'magenta'
 VERTEX_STARVATION_TEMPLATE = 'ST: {}/{}'
 VERTEX_PROBABILITY_TEMPLATE = 'P: {}'
+VERTEX_TS_TEMPLATE = 'TS: {}'
 
 DEFAULT_FONT = ('Helvetica',-10)
 
@@ -72,11 +73,19 @@ def create_vertex(canvas,vertex):
         font = DEFAULT_FONT
     )
 
+    vertex_total_starvation_text = canvas.create_text(
+        v['position'].x,
+        v['position'].y - 20,
+        text = VERTEX_TS_TEMPLATE.format(0),
+        font = DEFAULT_FONT
+    )
+
     return {
         'body': vertex_body,
         'text': {
             'starvation': vertex_starvation_text,
             'probability': vertex_probability_text,
+            'total_starvation': vertex_total_starvation_text,
         },
     }
 
@@ -93,6 +102,11 @@ def update_vertex(canvas,vertex,vertex_static,vertex_live,frame_index,show_text)
     )
     canvas.itemconfigure(
         vertex['text']['probability'],
-        text = VERTEX_PROBABILITY_TEMPLATE.format('%.3f' % vertex_static['probability']),
+        # text = VERTEX_PROBABILITY_TEMPLATE.format('%.3f' % vertex_static['probability']),
+        state = 'normal' if show_text else 'hidden',
+    )
+    canvas.itemconfigure(
+        vertex['text']['total_starvation'],
+        text = VERTEX_TS_TEMPLATE.format(vertex_live['total_starvation']),
         state = 'normal' if show_text else 'hidden',
     )

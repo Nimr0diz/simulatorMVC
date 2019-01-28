@@ -10,9 +10,11 @@ def run_algorithm_on_world(world,alg_name,tpd):
   vertexes = create_vertexes_from_visit_points(world)
   algo = import_algorithm(alg_name)
   patrol = start_patrol(world,algo,tpd,vertexes)
+  statistic = caclulate_statistic(world,vertexes,alg_name,tpd)
   return {
     'world': world,
     'frames': patrol,
+    'statistic': statistic
   }
 
 def create_vertexes_from_visit_points(world):
@@ -90,3 +92,14 @@ def simple_path_steps(p_src,current_angle, p_dst,walk_speed,rotation_speed):
       frames.append({'angle': target_angle, 'position': Point(p_src.x + math.cos(target_angle) * step,p_src.y + math.sin(target_angle)* step)})
   frames.append({'angle': target_angle, 'position':p_dst})
   return frames
+
+def caclulate_statistic(world,vertexes,alg_name,tpd):
+  for v in vertexes:
+    v.visit(tpd)
+  stat = {
+    'total_price': sum([v.ts * v.p for v in vertexes]),
+    'alg_name': alg_name,
+    'tpd': tpd,
+    'num_of_vertexes': len(vertexes)
+  }
+  return stat
