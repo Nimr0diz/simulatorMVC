@@ -8,10 +8,7 @@ class Controller:
         self.scenerio = scenerio
 
         self.is_playing = False
-        self.show_text = {
-            'starvation': False,
-            'probability': False
-        }
+        self.show_text = True,
         self.frame_index = 0
 
 
@@ -27,7 +24,7 @@ class Controller:
                 self.monitor.canvas.update()
             prev_frame_index = self.frame_index
             self.control_widgets.update_timeline(self.frame_index)
-            if self.is_playing:
+            if self.is_playing and self.frame_index + 1 < len(self.scenerio['frames']):
                 self.frame_index += 1
 
 
@@ -43,10 +40,6 @@ class Controller:
         self.frame_index = newFrame
 
     
-    def toggle_starvation_text(self):
-        self.show_text['starvation'] = not self.show_text['starvation'] 
-        return self.show_text['starvation']
-
-    def toggle_probability_text(self):
-        self.show_text['probability'] = not self.show_text['probability'] 
-        return self.show_text['probability']
+    def toggle_text(self):
+        self.show_text = not self.show_text 
+        return self.show_text

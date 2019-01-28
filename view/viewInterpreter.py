@@ -6,25 +6,29 @@ from view.gui_screens.gui_classes.view import View
 class ViewInterpreter:
   def __init__(self,controller):
     self.controller = controller
-
-  def start(self):
-    all_commands ={
-      'exit': self.exit,
-      'loadworld': self.load_world,
-      'runalgo': self.run_algorithm,
+  def prestart(self,script_file):
+    self.all_commands = { 
+        'exit': self.exit,
+        'loadworld': self.load_world,
+        'runalgo': self.run_algorithm,
+        'showscenerio': self.show_scenerio,
     }
 
+    self.load_scripts_from_file(script_file)
+
+    
+  def start(self):
     self.print_opening_message()
 
     try_to_exit = False
     interrupted = False
-    self.load_world({'f': './_data/simple_world.world'})
-    self.run_algorithm({'a': 'greedy_a','t': 600})
-    self.show_scenerio({})
+    # self.load_world({'f': './_data/simple_world.world'})
+    # self.run_algorithm({'a': 'greedy_a','t': 600})
+    # self.show_scenerio({})
     while not interrupted:
       try:
         user_input = input(">>> ")
-      except KeyboardInterrupt as e:
+      except KeyboardInterrupt:
         if try_to_exit:
           print("")
           interrupted = True
@@ -32,13 +36,26 @@ class ViewInterpreter:
           print("\n(To exit, press ^C again)")
           try_to_exit = True
         continue
+
       try_to_exit = False
-      command_name, args = self.parse_input(user_input)
-      if command_name in all_commands:
-        all_commands[command_name](args)
-      else:
-        print("the command '{}' doesn't exist.".format(command_name))
-        continue        
+      self.handle_input(user_input)
+
+  def load_scripts_from_file(self,file_path):
+    try:
+      with open(file_path) as f:
+        lines = f.readlines()
+      for line in lines:
+        print(">>>",line.rstrip())
+        self.handle_input(line.rstrip())
+    except FileNotFoundError as e:
+      print("Script file not found in path {}, continue usual".format(file_path))
+
+  def handle_input(self, user_input):
+    command_name, args = self.parse_input(user_input)
+    if command_name in self.all_commands:
+      self.all_commands[command_name](args)
+    else:
+      print("the command '{}' doesn't exist.".format(command_name))
 
   def parse_input(self,user_input):
     user_input = re.sub(" +"," ",user_input)
@@ -66,7 +83,6 @@ class ViewInterpreter:
       else:
         args[arg] = True
         i += 1
-
     return command, args
       
   def print_opening_message(self):
@@ -89,7 +105,7 @@ class ViewInterpreter:
   
   def run_algorithm(self,args):
     algo = args['a']
-    tpd = args['t']
+    tpd = int(args['t'])
     success,error_msg = self.controller.run_algorithm_on_world(algo,tpd)
     if success:
       print("Algorithm run complete.\nrun 'infoscenerio' for details or 'showscenerio' for GUI view")

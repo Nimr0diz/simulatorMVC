@@ -1,0 +1,3 @@
+loadworld -f ./_data/worlds/simple_world.world
+runalgo -a greedy_a -t 600
+showscenerio

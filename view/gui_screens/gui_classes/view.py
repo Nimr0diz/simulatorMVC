@@ -16,5 +16,7 @@ class View:
         controller = Controller(control_widgets, monitor, scenerio)
         control_widgets.setController(controller)
         monitor.setController(controller)
-
-        controller.start()
+        try:
+            controller.start()
+        except TclError as e:
+            print("GUI closed.")

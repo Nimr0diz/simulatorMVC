@@ -23,6 +23,8 @@ class Model:
 
   def run_algorithm_on_world(self,algo,tpd):
     try:
+      if self.current_world is None:
+        return False,"No world loaded"
       self.current_scenerio = dispatcher.run_algorithm_on_world(self.current_world,algo,tpd)
       # print(self.current_scenerio)
     except FileNotFoundError as e:

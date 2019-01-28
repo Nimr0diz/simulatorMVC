@@ -22,10 +22,8 @@ class ControlWidgets:
         self.reset_button.pack(side='left', padx=10)
         self.timeline = Scale(self.frame, orient=HORIZONTAL, length=250, to=self.num_of_frames, command=self.jump_to_frame)
         self.timeline.pack(side='left')
-        self.starvation_checkbox = Checkbutton(self.frame,text='Show starvation',command=self.toggle_starvation_text)
-        self.starvation_checkbox.pack(side='top')
-        self.probability_checkbox = Checkbutton(self.frame,text='Show probability',command=self.toggle_probability_text)
-        self.probability_checkbox.pack(side='top')
+        self.text_checkbox = Checkbutton(self.frame,text='Show text',command=self.toggle_text)
+        self.text_checkbox.pack(side='top')
 
 
     def play_or_pause(self):
@@ -47,17 +45,10 @@ class ControlWidgets:
     def jump_to_frame(self,newFrame):
         self.controller.jump_to_frame(int(newFrame))
 
-    def toggle_starvation_text(self):
-        isOn = self.controller.toggle_starvation_text()
-        if isOn:
-            self.starvation_checkbox.select()
-        else:
-            self.starvation_checkbox.deselect()
 
-            
-    def toggle_probability_text(self):
-        isOn = self.controller.toggle_probability_text()
+    def toggle_text(self):
+        isOn = self.controller.toggle_text()
         if isOn:
-            self.probability_checkbox.select()
+            self.text_checkbox.select()
         else:
-            self.probability_checkbox.deselect()
+            self.text_checkbox.deselect()

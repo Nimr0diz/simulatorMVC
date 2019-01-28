@@ -5,8 +5,11 @@ ROBOT_FACE_LENGTH = 20
 
 VERTEX_RADIUS = 7
 VERTEX_COLOR = 'blue'
+VERTEX_TARGET_COLOR = 'magenta'
 VERTEX_STARVATION_TEMPLATE = 'ST: {}/{}'
 VERTEX_PROBABILITY_TEMPLATE = 'P: {}'
+
+DEFAULT_FONT = ('Helvetica',-10)
 
 def create_robot(canvas,position):
     robot_body = canvas.create_oval(
@@ -59,12 +62,14 @@ def create_vertex(canvas,vertex):
         v['position'].x,
         v['position'].y - 40,
         text = VERTEX_STARVATION_TEMPLATE.format(0,v['starvation'],0,0),
+        font = DEFAULT_FONT
     )
 
     vertex_probability_text = canvas.create_text(
         v['position'].x,
-        v['position'].y - 20,
+        v['position'].y - 30,
         text = VERTEX_PROBABILITY_TEMPLATE.format(v['probability']),
+        font = DEFAULT_FONT
     )
 
     return {
@@ -77,14 +82,17 @@ def create_vertex(canvas,vertex):
 
 def update_vertex(canvas,vertex,vertex_static,vertex_live,frame_index,show_text):
     canvas.itemconfigure(
+        vertex['body'],
+        fill = VERTEX_TARGET_COLOR if vertex_live['is_target'] else VERTEX_COLOR
+    )
+    canvas.itemconfigure(
         vertex['text']['starvation'],
         text = VERTEX_STARVATION_TEMPLATE.format(frame_index - vertex_live['last_visit'], vertex_static['starvation']),
         fill = 'red' if frame_index > vertex_live['last_visit'] + vertex_static['starvation'] else 'black',
-        state = 'normal' if show_text['starvation'] else 'hidden',
+        state = 'normal' if show_text else 'hidden',
     )
     canvas.itemconfigure(
         vertex['text']['probability'],
         text = VERTEX_PROBABILITY_TEMPLATE.format('%.3f' % vertex_static['probability']),
-        state = 'normal' if show_text['probability'] else 'hidden',
-
+        state = 'normal' if show_text else 'hidden',
     )

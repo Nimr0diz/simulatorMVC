@@ -41,15 +41,16 @@ def start_patrol(world,algo,tpd,vertexes):
     frames_of_path = path_to_goal(robot, world, next_vertex)
     for i,f in enumerate(frames_of_path):
       v_props = []
-      for v in vertexes:
+      for j,v in enumerate(vertexes):
         if f['position'] == v.point:
           v.visit(global_time + i)
         v_props.append({
           'last_visit': v.lv,
           'total_starvation': v.ts,
+          'is_target': next_vertex == j,
         })
       f['vertexes'] = v_props
-      
+
     robot['current_vertex'] = next_vertex
     global_time += len(frames_of_path)
     vertexes[next_vertex].visit(global_time)
