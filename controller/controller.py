@@ -18,9 +18,9 @@ class Controller:
     self.check_for_model()
     return self.model.load_world_from_file(path)
 
-  def run_algorithm_on_world(self,algo,tpd):
+  def run_algorithm_on_world(self,algo,algo_args,tpd):
     self.check_for_model()
-    return self.model.run_algorithm_on_world(algo,tpd)
+    return self.model.run_algorithm_on_world(algo,algo_args,tpd)
 
   def get_scenerio_for_gui(self):
     self.check_for_model()

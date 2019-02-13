@@ -21,11 +21,11 @@ class Model:
       return False,e
     return True,""
 
-  def run_algorithm_on_world(self,algo,tpd):
+  def run_algorithm_on_world(self,algo,algo_args,tpd):
     try:
       if self.current_world is None:
         return False,"No world loaded"
-      self.current_scenerio = dispatcher.run_algorithm_on_world(self.current_world,algo,tpd)
+      self.current_scenerio = dispatcher.run_algorithm_on_world(self.current_world,algo,algo_args,tpd)
       # print(self.current_scenerio)
     except FileNotFoundError as e:
       return False,e

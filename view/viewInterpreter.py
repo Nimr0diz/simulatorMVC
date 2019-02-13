@@ -71,19 +71,31 @@ class ViewInterpreter:
       if i < len(args_strs) - 1 :
         next_arg = args_strs[i+1]
       if "-" == arg[0]:
-        arg = arg[1:]
-      else:
-        return command, None
-      if next_arg:
-        if "-" == next_arg[0]:
-          args[arg] = True
-          i += 1
+        if ":" in arg:
+          arg,subarg = arg[1:].split(':')
+          if next_arg:
+            if "-" == next_arg[0]:
+              args[arg][subarg] = True
+              i += 1
+            else:
+              args[arg][subarg] = next_arg
+              i += 2
+          else:
+            args[arg][subarg] = True
+            i += 1
         else:
-          args[arg] = next_arg
-          i += 2
-      else:
-        args[arg] = True
-        i += 1
+          arg = arg[1:]
+          args[arg] = {}
+          if next_arg:
+            if "-" == next_arg[0]:
+              args[arg]['default'] = True
+              i += 1
+            else:
+              args[arg]['default'] = next_arg
+              i += 2
+          else:
+            args[arg]['default'] = True
+            i += 1
     return command, args
       
   def print_opening_message(self):
@@ -98,7 +110,7 @@ class ViewInterpreter:
     exit()
 
   def load_world(self,args):
-    path = args['f']
+    path = args['f']['default']
     success,error_msg = self.controller.load_world_from_file(path)
     if success:
       print("World loaded successfully!")
@@ -106,9 +118,10 @@ class ViewInterpreter:
       print(error_msg)
   
   def run_algorithm(self,args):
-    algo = args['a']
-    tpd = int(args['t'])
-    success,error_msg = self.controller.run_algorithm_on_world(algo,tpd)
+    algo = args['a']['default']
+    algo_args = args['a']
+    tpd = int(args['t']['default'])
+    success,error_msg = self.controller.run_algorithm_on_world(algo,algo_args,tpd)
     if success:
       print("Algorithm run complete.\nrun 'infoscenerio' for details or 'showscenerio' for GUI view")
     else:

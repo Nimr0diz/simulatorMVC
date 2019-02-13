@@ -6,10 +6,10 @@ import model.utils.dispatcher_utils as dispatcher_utils
 from model.entities.vertex import Vertex
 from model.entities.point import Point
 
-def run_algorithm_on_world(world,alg_name,tpd):
+def run_algorithm_on_world(world,alg_name,alg_args,tpd):
   vertexes = create_vertexes_from_visit_points(world)
   algo = import_algorithm(alg_name)
-  patrol = start_patrol(world,algo,tpd,vertexes)
+  patrol = start_patrol(world,algo,alg_args,tpd,vertexes)
   statistic = caclulate_statistic(world,vertexes,alg_name,tpd)
   return {
     'world': world,
@@ -27,7 +27,7 @@ def import_algorithm(alg_name):
   except ModuleNotFoundError:
     raise NameError("the algorithm: '{}' doesn't exist!".format(alg_name))
 
-def start_patrol(world,algo,tpd,vertexes):
+def start_patrol(world,algo_type,alg_args,tpd,vertexes):
   distance_matrix = create_distance_matrix(world)
   global_time = 0
   robot = {
@@ -38,8 +38,10 @@ def start_patrol(world,algo,tpd,vertexes):
     'rotation_speed': world['robot']['rotation_speed'],
   }
   patrol = []
+  algo = algo_type(world,distance_matrix,alg_args)
+  algo.start()
   while global_time < tpd:
-    next_vertex = algo.next_step(robot['current_vertex'],vertexes, distance_matrix,global_time)
+    next_vertex = algo.next_step(robot['current_vertex'],vertexes,global_time)
     frames_of_path = path_to_goal(robot, world, next_vertex)
     for i,f in enumerate(frames_of_path):
       v_props = []
