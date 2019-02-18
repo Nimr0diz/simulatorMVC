@@ -38,3 +38,8 @@ class Only_starved_in_cluster:
     else:
       next_v = current_vertex_ind
     return next_v
+
+  def output(self):
+      return {
+        'clusters': self.clusters
+      }

@@ -14,7 +14,8 @@ class Controller:
 
     def start(self):
         world = self.scenerio['world']
-        self.monitor.init_objects(world['visit_points'],world['visit_points'][world['robot']['start_point']],world['obstacles'])
+        additional = self.scenerio['alg_output']
+        self.monitor.init_objects(world['visit_points'],world['visit_points'][world['robot']['start_point']],world['obstacles'],additional)
         prev_frame_index = -1
         while self.frame_index < len(self.scenerio['frames']):
             time.sleep(0.025)

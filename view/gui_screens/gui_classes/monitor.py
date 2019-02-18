@@ -18,9 +18,11 @@ class Monitor:
         self.canvas = Canvas(self.root, width=self.width, height = self.height)
         self.canvas.pack()
     
-    def init_objects(self, vertexes, robot_location, obstacles):
+    def init_objects(self, vertexes, robot_location, obstacles, additional):
         self.canvas.create_rectangle(1,1,self.width,self.height)
         self.robot = create_robot(self.canvas,robot_location['position'])
+        if 'clusters' in additional:
+            vertexes = [{**v,'cluster': next(c_i for c_i,c in enumerate(additional['clusters']) if v_i in c)} for v_i,v in enumerate(vertexes)]
         self.verts = [create_vertex(self.canvas,v) for v in vertexes]
         self.verts_static = vertexes
         for ob in obstacles:

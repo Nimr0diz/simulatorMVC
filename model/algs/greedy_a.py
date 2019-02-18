@@ -18,3 +18,6 @@ class Greedy_a:
         max_ind = i
         max_price = current_v_price
     return max_ind
+  
+  def output(self):
+    return {}

@@ -1,7 +1,7 @@
 import json
 import model.utils.parser as parser
 import model.utils.dispatcher as dispatcher
-
+import pprint
 class Model:
   def __init__(self,controller):
     self.controller = controller
@@ -15,6 +15,7 @@ class Model:
       world_data = json.loads(world_json)
       self.current_world = parser.json_to_world(world_data)
       self.current_world_path = path
+      pprint.pprint(self.current_world)
     except FileNotFoundError:
       return False,"File not found"
     except Exception as e:

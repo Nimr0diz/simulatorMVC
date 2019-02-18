@@ -1,6 +1,8 @@
 
-def CONSTANT_B():
-  return 1
+CONSTANTS = {
+  'B': 1
+}
+
 
 
 def time_function(t):

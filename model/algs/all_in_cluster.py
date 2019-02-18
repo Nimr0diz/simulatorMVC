@@ -32,4 +32,13 @@ class All_in_cluster:
       vs_of_cluster.sort(key = lambda v:v[1], reverse = True)
       self.queue.extend(map(lambda v:v[0],vs_of_cluster))
 
+    if self.queue:
+      next_v = self.queue.popleft()
+    else:
+      next_v = current_vertex_ind
     return next_v
+
+  def output(self):
+    return {
+      'clusters': self.clusters
+    }

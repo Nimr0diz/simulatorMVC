@@ -9,12 +9,13 @@ from model.entities.point import Point
 def run_algorithm_on_world(world,alg_name,alg_args,tpd):
   vertexes = create_vertexes_from_visit_points(world)
   algo = import_algorithm(alg_name)
-  patrol = start_patrol(world,algo,alg_args,tpd,vertexes)
+  patrol,alg_output = start_patrol(world,algo,alg_args,tpd,vertexes)
   statistic = caclulate_statistic(world,vertexes,alg_name,tpd)
   return {
     'world': world,
     'frames': patrol,
-    'statistic': statistic
+    'statistic': statistic,
+    'alg_output': alg_output,
   }
 
 def create_vertexes_from_visit_points(world):
@@ -60,7 +61,8 @@ def start_patrol(world,algo_type,alg_args,tpd,vertexes):
     vertexes[next_vertex].visit(global_time)
     patrol.extend(frames_of_path)
   
-  return patrol
+  alg_output = algo.output()
+  return patrol,alg_output
 
 def path_to_goal(robot, world, next_vertex):
   return complex_path_steps(world,robot['current_vertex'],next_vertex)
@@ -77,6 +79,7 @@ def complex_path_length(world,vp_src,vp_dst):
   return len(complex_path_steps(world,vp_src,vp_dst))
 
 def complex_path_steps(world,vp_src,vp_dst):
+  print("$$$",world['visit_points'][vp_dst]['position'])
   path = dijakstra.get_points_path_with_dijakstra(world,world['visit_points'][vp_src]['position'],world['visit_points'][vp_dst]['position'])
   frames = [{'position':path[0],'angle':0}]
   if len(path) == 1:
