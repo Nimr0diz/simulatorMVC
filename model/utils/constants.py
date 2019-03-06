@@ -1,0 +1,3 @@
+CONSTANTS = {
+  'B': 1
+}

@@ -79,7 +79,7 @@ def complex_path_length(world,vp_src,vp_dst):
   return len(complex_path_steps(world,vp_src,vp_dst))
 
 def complex_path_steps(world,vp_src,vp_dst):
-  print("$$$",world['visit_points'][vp_dst]['position'])
+  # print("$$$",world['visit_points'][vp_dst]['position'])
   path = dijakstra.get_points_path_with_dijakstra(world,world['visit_points'][vp_src]['position'],world['visit_points'][vp_dst]['position'])
   frames = [{'position':path[0],'angle':0}]
   if len(path) == 1:

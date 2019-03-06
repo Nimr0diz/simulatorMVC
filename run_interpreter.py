@@ -11,8 +11,10 @@ def run():
   c.model = m
   c.view = v
   if len(sys.argv) >= 2:
-    print(sys.argv[1])
+    # print(sys.argv[1])
     v.prestart(sys.argv[1])
+  else:
+    v.prestart()
   v.start()
 
 run()

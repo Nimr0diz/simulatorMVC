@@ -30,4 +30,7 @@ class Controller:
     self.check_for_model()
     return self.model.get_scenerio_info()
 
+  def set_const(self,const_name,new_value):
+    self.check_for_model()
+    return self.model.set_const(const_name,new_value)
   

@@ -3,19 +3,23 @@ import subprocess as sp
 import re
 from controller.controller import Controller
 from view.gui_screens.gui_classes.view import View
+
+from model.utils.constants import CONSTANTS
+
 class ViewInterpreter:
   def __init__(self,controller):
     self.controller = controller
-  def prestart(self,script_file):
+  def prestart(self,script_file=None):
     self.all_commands = { 
         'exit': self.exit,
         'loadworld': self.load_world,
         'runalgo': self.run_algorithm,
         'showscenerio': self.show_scenerio,
         'infoscenerio': self.print_scenerio_info,
+        'changeconst': self.change_constant,
     }
-
-    self.load_scripts_from_file(script_file)
+    if script_file:
+      self.load_scripts_from_file(script_file)
 
     
   def start(self):
@@ -141,9 +145,19 @@ class ViewInterpreter:
     details = self.controller.get_scenerio_info()
     text_lines = [" {}: {} ".format(k,v) for k,v in details.items()]
     size = max([len(tl) for tl in text_lines])
-    print(text_lines)
     print("#" + size*"#" + "#")
     for tl in text_lines:
       print("#" + tl.ljust(size) + "#")
     print("#" + size*"#" + "#")
+
+  def change_constant(self,args):
+    const_name = args['n']['default']
+    new_value = args['v']['default']
+    success,error_msg = self.controller.set_const(const_name,new_value)
+    if success:
+      print('Set {} to "{}"'.format(const_name,new_value))
+    else:
+      print(error_msg)
+    
+    print(CONSTANTS)
 

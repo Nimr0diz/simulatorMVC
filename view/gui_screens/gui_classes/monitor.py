@@ -35,6 +35,7 @@ class Monitor:
         for v,v_static,v_live in zip(self.verts,self.verts_static,frame['vertexes']):
             update_vertex(self.canvas,v,v_static,v_live,ind,self.controller.show_text)
         if 'message' in frame:
-            print("MONITOR[{0}]: {1}".format(ind,frame['message']))
+            pass
+            # print("MONITOR[{0}]: {1}".format(ind,frame['message']))
         self.canvas.update()
 

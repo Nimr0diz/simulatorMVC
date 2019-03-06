@@ -2,6 +2,8 @@ import json
 import model.utils.parser as parser
 import model.utils.dispatcher as dispatcher
 import pprint
+from model.utils.constants import CONSTANTS
+
 class Model:
   def __init__(self,controller):
     self.controller = controller
@@ -15,7 +17,7 @@ class Model:
       world_data = json.loads(world_json)
       self.current_world = parser.json_to_world(world_data)
       self.current_world_path = path
-      pprint.pprint(self.current_world)
+      # pprint.pprint(self.current_world)
     except FileNotFoundError:
       return False,"File not found"
     except Exception as e:
@@ -41,3 +43,18 @@ class Model:
   
   def get_scenerio_info(self):
     return self.current_scenerio['statistic']
+
+  def set_const(self,const_name,new_value):
+    if const_name in CONSTANTS:
+      try:
+        converted_value = float(new_value)
+      except ValueError:
+        try:
+          converted_value = int(new_value)
+        except ValueError:
+          converted_value = new_value
+          
+      CONSTANTS[const_name] = converted_value
+      return True,""
+    else:
+      return False,"Constant '{}' not found".format(const_name)
