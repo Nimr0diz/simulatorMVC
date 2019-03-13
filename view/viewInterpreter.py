@@ -2,7 +2,7 @@ import string
 import subprocess as sp
 import re
 from controller.controller import Controller
-from view.gui_screens.gui_classes.view import View
+from view.gui.screens.scenerioDisplayer import ScenerioDisplayer as ScenerioDisplayer
 
 from model.utils.constants import CONSTANTS
 
@@ -144,7 +144,7 @@ class ViewInterpreter:
     success = response[0]
     if success:
       scenerio = response[1]
-      View(scenerio)
+      ScenerioDisplayer(scenerio)
     else:
       error_msg = response[1]
       print(error_msg)

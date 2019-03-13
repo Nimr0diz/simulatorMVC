@@ -1,6 +1,6 @@
 from tkinter import *
 import math
-from view.gui_screens.gui_classes.drawer import *
+import view.gui.classes.utils.drawer as drawer
 class Monitor:
 
     def __init__(self,root,width,height):
@@ -10,8 +10,8 @@ class Monitor:
         self.create_canvas()
     
 
-    def setController(self, controller):
-        self.controller = controller
+    def setEngine(self, engine):
+        self.engine = engine
     
 
     def create_canvas(self):
@@ -20,10 +20,10 @@ class Monitor:
     
     def init_objects(self, vertexes, robot_location, obstacles, additional):
         self.canvas.create_rectangle(1,1,self.width,self.height)
-        self.robot = create_robot(self.canvas,robot_location['position'])
+        self.robot = drawer.create_robot(self.canvas,robot_location['position'])
         if 'clusters' in additional:
             vertexes = [{**v,'cluster': next(c_i for c_i,c in enumerate(additional['clusters']) if v_i in c)} for v_i,v in enumerate(vertexes)]
-        self.verts = [create_vertex(self.canvas,v) for v in vertexes]
+        self.verts = [drawer.create_vertex(self.canvas,v) for v in vertexes]
         self.verts_static = vertexes
         for ob in obstacles:
             self.canvas.create_line(ob[0].x, ob[0].y, ob[1].x, ob[1].y)
@@ -31,11 +31,10 @@ class Monitor:
     def drawFrame(self,frame,ind):
         pos = frame['position']
         ang = frame['angle']
-        update_robot(self.canvas,self.robot,pos,ang)
+        drawer.update_robot(self.canvas,self.robot,pos,ang)
         for v,v_static,v_live in zip(self.verts,self.verts_static,frame['vertexes']):
-            update_vertex(self.canvas,v,v_static,v_live,ind,self.controller.show_text)
+            drawer.update_vertex(self.canvas,v,v_static,v_live,ind,self.engine.show_text)
         if 'message' in frame:
             pass
-            # print("MONITOR[{0}]: {1}".format(ind,frame['message']))
         self.canvas.update()
 

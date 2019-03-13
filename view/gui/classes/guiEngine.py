@@ -1,8 +1,8 @@
 import time
 
-class Controller:
-    def __init__(self,control_widgets,monitor,scenerio):
-        self.control_widgets = control_widgets
+class GuiEngine:
+    def __init__(self,control_panel,monitor,scenerio):
+        self.control_panel = control_panel
         self.monitor = monitor
         
         self.scenerio = scenerio
@@ -24,7 +24,7 @@ class Controller:
             else:
                 self.monitor.canvas.update()
             prev_frame_index = self.frame_index
-            self.control_widgets.update_timeline(self.frame_index)
+            self.control_panel.update_timeline(self.frame_index)
             if self.is_playing and self.frame_index + 1 < len(self.scenerio['frames']):
                 self.frame_index += 1
 

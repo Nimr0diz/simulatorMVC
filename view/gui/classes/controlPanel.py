@@ -1,6 +1,6 @@
 from tkinter import *
 
-class ControlWidgets:
+class ControlPanel:
 
     def __init__(self,root,num_of_frames, width):
         self.root = root
@@ -9,8 +9,8 @@ class ControlWidgets:
         self.create_controllers()
 
 
-    def setController(self, controller ):
-        self.controller = controller
+    def setEngine(self, engine ):
+        self.engine = engine
 
 
     def create_controllers(self):
@@ -27,7 +27,7 @@ class ControlWidgets:
 
 
     def play_or_pause(self):
-        isPlaying = self.controller.play_or_pause()
+        isPlaying = self.engine.play_or_pause()
         if isPlaying:
             self.play_pause_button.config( text = 'Pause')
         else:
@@ -43,11 +43,11 @@ class ControlWidgets:
 
     
     def jump_to_frame(self,newFrame):
-        self.controller.jump_to_frame(int(newFrame))
+        self.engine.jump_to_frame(int(newFrame))
 
 
     def toggle_text(self):
-        isOn = self.controller.toggle_text()
+        isOn = self.engine.toggle_text()
         if isOn:
             self.text_checkbox.select()
         else:
