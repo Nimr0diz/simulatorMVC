@@ -17,7 +17,6 @@ class Model:
       world_data = json.loads(world_json)
       self.current_world = parser.json_to_world(world_data)
       self.current_world_path = path
-      # pprint.pprint(self.current_world)
     except FileNotFoundError:
       return False,"File not found"
     except Exception as e:
@@ -29,7 +28,6 @@ class Model:
       if self.current_world is None:
         return False,"No world loaded"
       self.current_scenerio = dispatcher.run_algorithm_on_world(self.current_world,algo,algo_args,tpd)
-      # print(self.current_scenerio)
     except FileNotFoundError as e:
       return False,e
     except NameError as e:

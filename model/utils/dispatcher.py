@@ -23,7 +23,7 @@ def create_vertexes_from_visit_points(world):
 
 def import_algorithm(alg_name):
   try:
-    algo_module = importlib.import_module('model.algs.{}'.format(alg_name))
+    algo_module = importlib.import_module('model.algs.{}'.format(alg_name)) # dynamic import of module by alg name
     return getattr(algo_module,alg_name.capitalize())
   except ModuleNotFoundError:
     raise NameError("the algorithm: '{}' doesn't exist!".format(alg_name))
@@ -40,16 +40,16 @@ def start_patrol(world,algo_type,alg_args,tpd,vertexes):
   }
   patrol = []
   algo = algo_type(world,distance_matrix,alg_args)
-  algo.start()
+  algo.start() # some of the algorithms has preprocessing to do so the dispatcher let them do the calculations first
   while global_time < tpd:
     next_vertex = algo.next_step(robot['current_vertex'],vertexes,global_time)
-    frames_of_path = path_to_goal(robot, world, next_vertex)
-    for i,f in enumerate(frames_of_path):
+    frames_of_path = path_to_goal(robot, world, next_vertex) # get the frames of the current path
+    for i,f in enumerate(frames_of_path): # check each frame if it has an unexcpected visit (if a visit-point is in the best way to target)
       v_props = []
       for j,v in enumerate(vertexes):
         if f['position'] == v.point:
           v.visit(global_time + i)
-        v_props.append({
+        v_props.append({ # adding metadata to each frame to display later in gui view
           'last_visit': v.lv,
           'total_starvation': v.ts,
           'is_target': next_vertex == j,
@@ -57,15 +57,16 @@ def start_patrol(world,algo_type,alg_args,tpd,vertexes):
       f['vertexes'] = v_props
 
     robot['current_vertex'] = next_vertex
+    robot['angle'] = frames_of_path[-1]['angle'] # update robot's angle to last angle in path
     global_time += len(frames_of_path)
     vertexes[next_vertex].visit(global_time)
     patrol.extend(frames_of_path)
   
-  alg_output = algo.output()
+  alg_output = algo.output() # collecting output from the algorithm if exists (for example: the clusters)
   return patrol,alg_output
 
 def path_to_goal(robot, world, next_vertex):
-  return complex_path_steps(world,robot['current_vertex'],next_vertex)
+  return complex_path_steps(world,robot['angle'],robot['current_vertex'],next_vertex)
 
 def create_distance_matrix(world):
   vps = world['visit_points']
@@ -76,16 +77,14 @@ def create_distance_matrix(world):
   return matrix
 
 def complex_path_length(world,vp_src,vp_dst):
-  return len(complex_path_steps(world,vp_src,vp_dst))
+  return len(complex_path_steps(world,0,vp_src,vp_dst))
 
-def complex_path_steps(world,vp_src,vp_dst):
-  # print("$$$",world['visit_points'][vp_dst]['position'])
+def complex_path_steps(world,current_angle,vp_src,vp_dst):
   path = dijakstra.get_points_path_with_dijakstra(world,world['visit_points'][vp_src]['position'],world['visit_points'][vp_dst]['position'])
-  frames = [{'position':path[0],'angle':0}]
-  if len(path) == 1:
-    return [{'angle': 0, 'position': path[0]}]
-  for i in range(0, len(path) - 1):
-    frames += simple_path_steps(path[i],frames[-1]['angle'], path[i + 1], world['robot']['walk_speed'], world['robot']['rotation_speed'])
+  frames = [{'position':path[0],'angle':current_angle}]
+  if len(path) > 1:
+    for i in range(0, len(path) - 1):
+      frames += simple_path_steps(path[i],frames[-1]['angle'], path[i + 1], world['robot']['walk_speed'], world['robot']['rotation_speed'])
   return frames
 
 def simple_path_steps(p_src,current_angle, p_dst,walk_speed,rotation_speed):
@@ -99,7 +98,7 @@ def simple_path_steps(p_src,current_angle, p_dst,walk_speed,rotation_speed):
   return frames
 
 def caclulate_statistic(world,vertexes,alg_name,tpd):
-  for v in vertexes:
+  for v in vertexes: # visit all vertexes at the end of the patrol to sum up the cst of all the vertexes
     v.visit(tpd)
   stat = {
     'total_price': sum([v.ts * v.p for v in vertexes]),

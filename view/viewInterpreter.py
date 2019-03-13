@@ -12,6 +12,7 @@ class ViewInterpreter:
   def prestart(self,script_file=None):
     self.all_commands = { 
         'exit': self.exit,
+        'cmdlist': self.print_cmd_list,
         'loadworld': self.load_world,
         'runalgo': self.run_algorithm,
         'showscenerio': self.show_scenerio,
@@ -27,13 +28,11 @@ class ViewInterpreter:
 
     try_to_exit = False
     interrupted = False
-    # self.load_world({'f': './_data/simple_world.world'})
-    # self.run_algorithm({'a': 'greedy_a','t': 600})
-    # self.show_scenerio({})
+
     while not interrupted:
       try:
         user_input = input(">>> ")
-      except KeyboardInterrupt:
+      except KeyboardInterrupt: # Catch if user type Ctrl+C twice in arrow (Like in Node.JS console). Not more than a gimmick :)
         if try_to_exit:
           print("")
           interrupted = True
@@ -50,17 +49,22 @@ class ViewInterpreter:
       with open(file_path) as f:
         lines = f.readlines()
       for line in lines:
-        print(">>>",line.rstrip())
-        self.handle_input(line.rstrip())
+        fixed_line = line.rstrip() # clear unnecessery characters at the end of the line (e.g: New-Line, Tabs, spaces, etc..)
+        print(">>>",fixed_line)
+        succeed_to_execute = self.handle_input(fixed_line)
+        if not succeed_to_execute: # stop script file from running if line was broken
+          break
     except FileNotFoundError as e:
-      print("Script file not found in path {}, continue usual".format(file_path))
+      print("Script file not found in path {}, continues as usual".format(file_path))
 
   def handle_input(self, user_input):
     command_name, args = self.parse_input(user_input)
     if command_name in self.all_commands:
       self.all_commands[command_name](args)
+      return True
     else:
       print("the command '{}' doesn't exist.".format(command_name))
+      return False
 
   def parse_input(self,user_input):
     user_input = re.sub(" +"," ",user_input)
@@ -106,12 +110,16 @@ class ViewInterpreter:
     print("") 
     print("Welcome to the Simulator Interpreter!")
     print("To start just enter the command you want to execute.")
-    print("If you want to use specific command just type: [COMMAND] -?")
+    print("If you want to use specific command just type: [COMMAND] -? (TBC)")
     print("If you want to know what commands do you have just type: cmdlist")
     print("") 
 
   def exit(self,args):
     exit()
+
+  def print_cmd_list(self,args):
+    for cmdname in self.all_commands:
+      print(cmdname)
 
   def load_world(self,args):
     path = args['f']['default']
