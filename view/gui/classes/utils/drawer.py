@@ -122,7 +122,6 @@ def update_vertex(canvas,vertex,vertex_static,vertex_live,frame_index,show_text)
     )
     canvas.itemconfigure(
         vertex['text']['probability'],
-        # text = VERTEX_PROBABILITY_TEMPLATE.format('%.3f' % vertex_static['probability']),
         state = 'normal' if show_text else 'hidden',
     )
     canvas.itemconfigure(
